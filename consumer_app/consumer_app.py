@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 from elasticsearch import Elasticsearch
 from neo4j import GraphDatabase
+import logging
 
 KAFKA_BROKER = 'kafka:9092'
 ELASTICSEARCH_HOST = 'elasticsearch'
@@ -12,7 +13,7 @@ TOPIC = 'test-topic'
 
 class Neo4jClient:
     def __init__(self, uri, user, password):
-        self._driver = GraphDatabase.driver(uri, auth=(user, password))
+        self._driver = GraphDatabase.driver(uri, auth=(user, password),api_version=(0,11,5))
 
     def close(self):
         self._driver.close()
@@ -29,6 +30,7 @@ class Neo4jClient:
 def main():
     while True:
         try:
+            logging.info("Connecting to Kafka, ES, neo4j...")
             # Initialize Kafka consumer
             consumer = KafkaConsumer(TOPIC, bootstrap_servers=[KAFKA_BROKER])
 
