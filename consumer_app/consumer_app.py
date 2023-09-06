@@ -1,10 +1,10 @@
 from kafka import KafkaConsumer
 from elasticsearch import Elasticsearch
 from neo4j import GraphDatabase
-import logging
+import logging, time
 
 KAFKA_BROKER = 'kafka:9092'
-ELASTICSEARCH_HOST = 'elasticsearch'
+ELASTICSEARCH_HOST = 'https://elasticsearch:9200'
 NEO4J_HOST = 'bolt://neo4j:7687'
 NEO4J_USER = 'neo4j'
 NEO4J_PASSWORD = 'some_password'
@@ -13,7 +13,7 @@ TOPIC = 'test-topic'
 
 class Neo4jClient:
     def __init__(self, uri, user, password):
-        self._driver = GraphDatabase.driver(uri, auth=(user, password),api_version=(0,11,5))
+        self._driver = GraphDatabase.driver(uri, auth=(user, password))
 
     def close(self):
         self._driver.close()
@@ -35,21 +35,21 @@ def main():
             consumer = KafkaConsumer(TOPIC, bootstrap_servers=[KAFKA_BROKER])
 
             # Initialize Elasticsearch client
-            es = Elasticsearch([ELASTICSEARCH_HOST])
+            # es = Elasticsearch([ELASTICSEARCH_HOST])
 
             # Initialize Neo4j client
             neo4j_client = Neo4jClient(NEO4J_HOST, NEO4J_USER, NEO4J_PASSWORD)
             
             break
         except Exception as e:
-            print(f"ERROR {e}")
+            logging.error(f"ERROR {e}")
             time.sleep(1)
     for msg in consumer:
         message = msg.value.decode('utf-8')
-        print(f"Received message: {message}")
+        logging.error(f"Received message: {message}")
 
         # Insert into Elasticsearch
-        es.index(index='messages', body={'content': message})
+        # es.index(index='messages', body={'content': message})
 
         # Insert into Neo4j
         neo4j_client.insert_message(message)

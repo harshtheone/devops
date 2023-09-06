@@ -11,23 +11,22 @@ def main():
     while True:
         logging.info("Connecting to Kafka, ES, neo4j...")
         try:
-            producer = KafkaProducer(bootstrap_servers=[KAFKA_BROKER],api_version=(0,11,5))
+            producer = KafkaProducer(bootstrap_servers=[KAFKA_BROKER])
             break
         except NoBrokersAvailable as e:
-            print(f"ERROR {e}")
+            logging.error(f"No Broker error: {e}")
             time.sleep(1)
     message_count = 0
 
     try:
         while True:
             message = f"Message {message_count}".encode('utf-8')
-            logging.error(message)
             producer.send(TOPIC, value=message)
-            logging.info(f"Sent: {message}")
+            logging.error(f"Sent message: {message}")
             message_count += 1
             time.sleep(1)  # wait for 1 second
     except KeyboardInterrupt:
-        print("Shutting down producer...")
+        logging.error("Shutting down producer...")
     finally:
         producer.close()
 

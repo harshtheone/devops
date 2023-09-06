@@ -5,10 +5,10 @@ FROM python:3.8-slim
 RUN pip install kafka-python elasticsearch neo4j
 
 # Copy your application code to the container
-COPY ./producer_app /app
+COPY ./consumer_app /app
 
 # Set the working directory
 WORKDIR /app
 
 # Set the command to run your application
-CMD ["python", "producer_app.py"]
+CMD ["python", "consumer_app.py"]
