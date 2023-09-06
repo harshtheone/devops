@@ -2,7 +2,7 @@
 FROM python:3.8-slim
 
 # Install the required libraries for Kafka, Elasticsearch, and Neo4j communication
-RUN pip install kafka-python elasticsearch neo4j
+RUN pip install kafka-python elasticsearch==7.10.0 neo4j
 
 # Copy your application code to the container
 COPY ./consumer_app /app
