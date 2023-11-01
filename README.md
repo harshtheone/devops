@@ -41,3 +41,4 @@ kubectl apply -f kafka-service.yaml
 ...
 # dance a little jig
 ```
+If you prefer, you can use cloud services in your example instead of installing locally. For example, AKS with ACR, or ECR with EKS.
